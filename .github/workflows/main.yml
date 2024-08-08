@@ -1,0 +1,30 @@
+name: Timestamp Example
+
+on: [push]
+
+jobs:
+  set-timestamp:
+    runs-on: ubuntu-latest
+    outputs:
+      steps: ${{ steps.timestamp.outputs }}
+    steps:
+      - name: Set Timestamp
+        id: timestamp
+        run: echo "TIMESTAMP=$(date +"%Y%m%d%H%M%S")" >> $GITHUB_ENV
+
+  use-timestamp:
+    needs: set-timestamp
+    runs-on: ubuntu-latest
+    steps:
+      - name: Use Timestamp
+        run: echo "Timestamp is $TIMESTAMP"
+      - name: Run tests
+        run: |
+          mkdir -p test-results
+          touch test-results/$TIMESTAMP-results.xml
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-results
+          path: test-results/
