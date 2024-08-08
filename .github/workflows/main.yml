@@ -13,11 +13,10 @@ jobs:
           touch test-results/result.xml
       - name: add timestamp
         run: |
-          TIMESTAMP=$(date +"%Y%m%d%H%M%S")
-          mv test-results test-results_$TIMESTAMP
+          echo "TIMESTAMP=$(date +"%Y%m%d%H%M%S")" >> $GITHUB_ENV
       - name: Upload test results
         uses: actions/upload-artifact@v3
         with:
-          name: test-results_$TIMESTAMP
-          path: test-results_*
+          name: test-results_${{ env.TIMESTAMP }}
+          path: test-results/
 
